@@ -19,13 +19,13 @@ if not os.path.exists('config.ini'):
 config = configparser.ConfigParser()
 config.read('config.ini')
 
-zone_id = config['Cloudflare']['zone_id']
-api_key = config['Cloudflare']['api_key']
-email = config['Cloudflare']['email']
-record_name = config['DNS']['record_name']
-record_type = config['DNS']['record_type']
-proxied = config['DNS']['proxied']
-ttl = config['DNS']['ttl']
+zone_id = config.get('Cloudflare', 'zone_id')
+api_key = config.get('Cloudflare', 'api_key')
+email = config.get('Cloudflare', 'email')
+record_name = config.get('DNS', 'record_name')
+record_type = config.get('DNS', 'record_type')
+proxied = config.get('DNS', 'proxied')
+ttl = config.get('DNS', 'ttl')
 
 # 获取当前的公共IP地址
 public_ip = requests.get('https://api.ipify.org').text
@@ -43,7 +43,7 @@ params = {
     "ttl": ttl,
     "proxied": proxied
 }
-response = requests.get(url, headers=headers, params=params).json()
+response = requests.post(url, headers=headers, json=params).json()
 
 # 输出更新结果
 if response['success']:
